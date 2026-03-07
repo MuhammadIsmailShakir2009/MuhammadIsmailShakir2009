@@ -1,0 +1,31 @@
+name: Generate Pac-Man Contribution Graph
+
+on:
+  schedule:
+    - cron: "0 */12 * * *"   # Runs every 12 hours automatically
+  workflow_dispatch:           # Allows manual trigger from GitHub Actions tab
+  push:
+    branches:
+      - main
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Generate Pac-Man Animation
+        uses: Platane/snk/svg-only@v3
+        with:
+          github_user_name: MuhammadIsmailShakir2009
+          outputs: |
+            dist/pacman-contribution-graph.svg
+            dist/pacman-contribution-graph-dark.svg?palette=github-dark
+
+      - name: Push Output to `output` Branch
+        uses: crazy-max/ghaction-github-pages@v3
+        with:
+          target_branch: output
+          build_dir: dist
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
